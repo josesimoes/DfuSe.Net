@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -105,7 +106,7 @@ namespace DfuSe.Core.Windows
 
 
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool DeviceIoControl(
+        private static extern bool DeviceIoControl(
             SafeFileHandle hDevice,
             EIOControlCode ioControlCode,
             [MarshalAs(UnmanagedType.AsAny)]
@@ -119,7 +120,7 @@ namespace DfuSe.Core.Windows
             );
 
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool DeviceIoControl(
+        private static extern bool DeviceIoControl(
             SafeFileHandle hDevice,
             EIOControlCode ioControlCode,
             byte[] inBuffer,
@@ -129,6 +130,144 @@ namespace DfuSe.Core.Windows
             ref uint pBytesReturned,
             IntPtr overlapped
             );
+
+        #endregion
+
+        #region DeviceIoControl helpers
+
+        public static T DeviceIoControl<T>(
+            SafeFileHandle handle,
+            EIOControlCode controlCode)
+        {
+            uint returnedBytes = 0;
+
+            // instantiate output object
+            object output = default(T);
+
+            // figure out size of output object
+            uint outputSize = (uint)Marshal.SizeOf<T>();
+
+            // invoke DeviceIoControl
+            bool success = DeviceIoControl(
+                handle,
+                controlCode,
+                null,
+                0,
+                output,
+                outputSize,
+                ref returnedBytes,
+                IntPtr.Zero);
+
+            if (!success)
+            {
+                int lastError = Marshal.GetLastWin32Error();
+                
+                throw new Win32Exception($"Exception invoking DeviceIoControl with control code {controlCode}: {new Win32Exception(lastError).Message}");
+            }
+
+            return (T)output;
+        }
+
+        public static T DeviceIoControl<T, V>(
+            SafeFileHandle handle,
+            EIOControlCode controlCode,
+            V input)
+        {
+            uint returnedBytes = 0;
+
+            // instantiate output object
+            object output = default(T);
+
+            // figure out size of output object
+            uint outputSize = (uint)Marshal.SizeOf<T>();
+            // figure out size of input object
+            uint inputSize = (uint)Marshal.SizeOf<V>();
+
+            bool success = DeviceIoControl(
+                handle,
+                controlCode,
+                input,
+                inputSize,
+                output,
+                outputSize,
+                ref returnedBytes,
+                IntPtr.Zero);
+
+            if (!success)
+            {
+                int lastError = Marshal.GetLastWin32Error();
+                
+                throw new Win32Exception($"Exception invoking DeviceIoControl with control code {controlCode}: {new Win32Exception(lastError).Message}");
+            }
+
+            return (T)output;
+        }
+
+        public static byte[] DeviceIoControl(
+            SafeFileHandle handle,
+            EIOControlCode controlCode,
+            uint input,
+            uint outputLength = 512)
+        {
+            uint returnedBytes = 0;
+
+            byte[] output = new byte[outputLength];
+
+            bool success = DeviceIoControl(
+                handle,
+                controlCode,
+                input,
+                1,
+                output,
+                outputLength,
+                ref returnedBytes,
+                IntPtr.Zero);
+
+            if (!success)
+            {
+                int lastError = Marshal.GetLastWin32Error();
+
+                throw new Win32Exception($"Exception invoking DeviceIoControl with control code {controlCode}: {new Win32Exception(lastError).Message}");
+            }
+
+            // resize buffer to match returned bytes
+            Array.Resize(ref output, (int)returnedBytes);
+
+            return output;
+        }
+
+        public static byte[] DeviceIoControl(
+            SafeFileHandle handle,
+            EIOControlCode controlCode,
+            byte[] input,
+            uint outputLength = 512)
+        {
+            uint returnedBytes = 0;
+
+            byte[] output = new byte[outputLength];
+
+            bool success = DeviceIoControl(
+                handle,
+                controlCode,
+                input,
+                (uint)input.Length,
+                output,
+                outputLength,
+                ref returnedBytes,
+                IntPtr.Zero);
+
+            if (!success)
+            {
+                int lastError = Marshal.GetLastWin32Error();
+
+                throw new Win32Exception($"Exception invoking DeviceIoControl with control code {controlCode}: {new Win32Exception(lastError).Message}");
+            }
+
+            // resize buffer to match returned bytes
+            Array.Resize(ref output, (int)returnedBytes);
+
+            return output;
+        }
 
         #endregion
     }

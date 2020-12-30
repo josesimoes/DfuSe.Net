@@ -6,7 +6,7 @@ using System.Text;
 namespace DfuSe.Core.Windows
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct USB_DEVICE_DESCRIPTOR
+    public struct USB_DEVICE_DESCRIPTOR
     {
         public byte bLength;
         public byte bDescriptorType;

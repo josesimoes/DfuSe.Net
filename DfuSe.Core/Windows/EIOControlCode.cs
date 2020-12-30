@@ -160,8 +160,11 @@ namespace DfuSe.Core.Windows
         VideoQuerySupportedBrightness = (EFileDevice.Video << 16) | (0x0125 << 2) | EMethod.Buffered | (0 << 14),
         VideoQueryDisplayBrightness = (EFileDevice.Video << 16) | (0x0126 << 2) | EMethod.Buffered | (0 << 14),
         VideoSetDisplayBrightness = (EFileDevice.Video << 16) | (0x0127 << 2) | EMethod.Buffered | (0 << 14),
-        
+
         // DFU
+        GetNumberOfConfigurations = (EFileDevice.Unknown << 16) | (0x0800 << 2) | EMethod.Buffered | (0 << 14),
+        GetConfigDescriptor = (EFileDevice.Unknown << 16) | (0x0801 << 2) | EMethod.Buffered | (0 << 14),
         GetDeviceDescriptor = (EFileDevice.Unknown << 16) | (0x0802 << 2) | EMethod.Buffered | (0 << 14),
+        GetStringDescriptor = (EFileDevice.Unknown << 16) | (0x0803 << 2) | EMethod.Buffered | (0 << 14),
     }
 }

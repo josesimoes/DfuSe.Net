@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace DfuSe.Core
 {
@@ -9,7 +9,7 @@ namespace DfuSe.Core
     {
         List<StDevice> m_OpenDevices = new List<StDevice>();
 
-        public StDeviceErrors Open(
+        public StDevice Open(
             string symbName,
             SafeFileHandle device,
             SafeFileHandle unplugEvent)
@@ -28,12 +28,25 @@ namespace DfuSe.Core
 
             var ret = stDevice.Open(unplugEvent);
 
+            if (ret == StDeviceErrors.STDEVICE_NOERROR)
+            {
+                // OK our STDevice object was successfully created. Let's add it to our collection
+                m_OpenDevices.Add(stDevice);
+            }
 
-
-            // OK our STDevice object was successfully created. Let's add it to our collection
-            m_OpenDevices.Add(stDevice);
-
-            return StDeviceErrors.STDEVICE_NOERROR;
+            return stDevice;
         }
+
+        public void Close(StDevice device)
+        {
+            if(m_OpenDevices.Contains(device))
+            {
+                device.Close();
+
+                m_OpenDevices.Remove(device);
+            }
+        }
+
+
     }
 }

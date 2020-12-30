@@ -7,12 +7,12 @@ namespace DfuSe.Core
     {
         StDevicesManager m_pMgr = new StDevicesManager();
 
-        public StDeviceErrors STDFU_Open(string devicePath, SafeFileHandle device)
+        public StDevice STDFU_Open(string devicePath, SafeFileHandle device)
         {
             return STDevice_Open(devicePath, device, null);
         }
 
-        private StDeviceErrors STDevice_Open(
+        private StDevice STDevice_Open(
             string devicePath,
             SafeFileHandle device,
             SafeFileHandle unplugEvent)
@@ -30,6 +30,11 @@ namespace DfuSe.Core
                 symbName,
                 device,
                 unplugEvent);
+        }
+
+        public void STDFU_Close(StDevice device)
+        {
+            m_pMgr.Close(device);
         }
     }
 }
