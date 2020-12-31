@@ -166,5 +166,6 @@ namespace DfuSe.Core.Windows
         GetConfigDescriptor = (EFileDevice.Unknown << 16) | (0x0801 << 2) | EMethod.Buffered | (0 << 14),
         GetDeviceDescriptor = (EFileDevice.Unknown << 16) | (0x0802 << 2) | EMethod.Buffered | (0 << 14),
         GetStringDescriptor = (EFileDevice.Unknown << 16) | (0x0803 << 2) | EMethod.Buffered | (0 << 14),
+        VendorRequest = (EFileDevice.Unknown << 16) | (0x0805 << 2) | EMethod.Buffered | (0 << 14),
     }
 }

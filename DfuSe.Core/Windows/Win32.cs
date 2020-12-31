@@ -203,6 +203,35 @@ namespace DfuSe.Core.Windows
             return (T)output;
         }
 
+
+        public static void DeviceIoControl(
+            SafeFileHandle handle,
+            EIOControlCode controlCode,
+            ControlPipeRequest input)
+        {
+            uint returnedBytes = 0;
+
+            // figure out size of input object
+            uint inputSize = (uint)Marshal.SizeOf<ControlPipeRequest>();
+
+            bool success = DeviceIoControl(
+                handle,
+                controlCode,
+                input,
+                inputSize,
+                null,
+                0,
+                ref returnedBytes,
+                IntPtr.Zero);
+
+            if (!success)
+            {
+                int lastError = Marshal.GetLastWin32Error();
+
+                throw new Win32Exception($"Exception invoking DeviceIoControl with control code {controlCode}: {new Win32Exception(lastError).Message}");
+            }
+        }
+
         public static byte[] DeviceIoControl(
             SafeFileHandle handle,
             EIOControlCode controlCode,

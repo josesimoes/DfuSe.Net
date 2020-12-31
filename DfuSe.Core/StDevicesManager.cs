@@ -47,6 +47,16 @@ namespace DfuSe.Core
             }
         }
 
+        internal T ControlPipeRequest<T>(StDevice device, ControlPipeRequest request)
+        {
+            if (m_OpenDevices.Contains(device))
+            {
+                return device.ControlPipeRequest<T>(request);
 
+
+            }
+
+            return default(T);
+        }
     }
 }

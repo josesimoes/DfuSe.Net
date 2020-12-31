@@ -34,7 +34,7 @@ namespace DfuSe.Core
         public List<USB_CONFIGURATION_DESCRIPTOR> ConfigurationDescriptors;
         private byte NumAlternates;
 
-        public DFU_FUNCTIONAL_DESCRIPTOR DfuDescriptor { get; private set; }
+        public DfuFunctionalDescriptor DfuDescriptor { get; private set; }
 
         public USB_INTERFACE_DESCRIPTOR DfuInterface { get; private set; }
 
@@ -76,6 +76,41 @@ namespace DfuSe.Core
 			}
 
 			return nRet;
+		}
+
+		public void GetStatus()
+        {
+
+        }
+
+        public T ControlPipeRequest<T>(ControlPipeRequest request)
+        {
+			if (!m_bDeviceIsOpen)
+			{
+				// STDEVICE_DRIVERISCLOSED;
+				return default(T);
+			}
+
+			// setup buffer fr device descriptor
+			return Win32.DeviceIoControl<T, ControlPipeRequest>(
+				m_DeviceHandle,
+				EIOControlCode.VendorRequest,
+				request);
+		}
+
+		public void ControlPipeRequest(ControlPipeRequest request)
+		{
+			if (!m_bDeviceIsOpen)
+			{
+				// STDEVICE_DRIVERISCLOSED;
+				return;
+			}
+
+			// setup buffer fr device descriptor
+			Win32.DeviceIoControl(
+				m_DeviceHandle,
+				EIOControlCode.VendorRequest,
+				request);
 		}
 
 		public StDeviceErrors Close()
@@ -289,13 +324,13 @@ namespace DfuSe.Core
 			return alternatesCount;
 		}
 
-		private DFU_FUNCTIONAL_DESCRIPTOR GetDfuDescriptor()
+		private DfuFunctionalDescriptor GetDfuDescriptor()
 		{
 			var numInterfaces = ConfigurationDescriptors[0].bNumInterfaces;
 
 			NumAlternates = GetNumberOfAlternates(numInterfaces - 1);
 
-			var dfuDescriptor = GetDescriptor<DFU_FUNCTIONAL_DESCRIPTOR>(numInterfaces - 1, NumAlternates - 1, 0, DFU_FUNCTIONAL_DESCRIPTOR.Type, DFU_FUNCTIONAL_DESCRIPTOR.DefaultSize);
+			var dfuDescriptor = GetDescriptor<DfuFunctionalDescriptor>(numInterfaces - 1, NumAlternates - 1, 0, DfuFunctionalDescriptor.Type, DfuFunctionalDescriptor.DefaultSize);
 
 			DfuInterface = GetInterfaceDescriptor(numInterfaces - 1, 0);
 

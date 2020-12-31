@@ -3,7 +3,7 @@
 namespace DfuSe.Core
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public class DFU_FUNCTIONAL_DESCRIPTOR
+    public class DfuFunctionalDescriptor
     {
         public const int DefaultSize = 9;
         public const int Type = 0x21;
