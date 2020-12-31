@@ -282,8 +282,8 @@ namespace DfuSe.Core
 					// this is a valid USB_INTERFACE_DESCRIPTOR
 					// load respective USB Interface descriptor struct
 					// need to use unamged pointer
-					IntPtr pointerToDescriptor = Marshal.AllocHGlobal(USB_INTERFACE_DESCRIPTOR.DefaultSize);
-					Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToDescriptor, USB_INTERFACE_DESCRIPTOR.DefaultSize);
+					IntPtr pointerToDescriptor = Marshal.AllocHGlobal(Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
+					Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToDescriptor, Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
 
 					var usbInterfaceDescriptor = (USB_INTERFACE_DESCRIPTOR)Marshal.PtrToStructure(pointerToDescriptor, typeof(USB_INTERFACE_DESCRIPTOR));
 
@@ -362,8 +362,8 @@ namespace DfuSe.Core
 					// this is a valid USB_INTERFACE_DESCRIPTOR
 					// load respective USB Interface descriptor struct
 					// need to use unamged pointer
-					pointerToDescriptor = Marshal.AllocHGlobal(USB_INTERFACE_DESCRIPTOR.DefaultSize);
-					Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToDescriptor, USB_INTERFACE_DESCRIPTOR.DefaultSize);
+					pointerToDescriptor = Marshal.AllocHGlobal(Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
+					Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToDescriptor, Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
 
 					usbInterfaceDescriptor = (USB_INTERFACE_DESCRIPTOR)Marshal.PtrToStructure(pointerToDescriptor, typeof(USB_INTERFACE_DESCRIPTOR));
 
@@ -407,8 +407,8 @@ namespace DfuSe.Core
 							// this is a valid USB_INTERFACE_DESCRIPTOR
 							// load respective USB Interface descriptor struct
 							// need to use unamged pointer
-							pointerToDescriptor = Marshal.AllocHGlobal(USB_INTERFACE_DESCRIPTOR.DefaultSize);
-							Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToDescriptor, USB_INTERFACE_DESCRIPTOR.DefaultSize);
+							pointerToDescriptor = Marshal.AllocHGlobal(Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
+							Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToDescriptor, Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
 
 							usbInterfaceDescriptor = (USB_INTERFACE_DESCRIPTOR)Marshal.PtrToStructure(pointerToDescriptor, typeof(USB_INTERFACE_DESCRIPTOR));
 
@@ -454,8 +454,8 @@ namespace DfuSe.Core
 					// this is a valid USB_INTERFACE_DESCRIPTOR
 					// load respective USB Interface descriptor struct
 					// need to use unamged pointer
-					IntPtr pointerToInterfaceDescriptor = Marshal.AllocHGlobal(USB_INTERFACE_DESCRIPTOR.DefaultSize);
-					Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToInterfaceDescriptor, USB_INTERFACE_DESCRIPTOR.DefaultSize);
+					IntPtr pointerToInterfaceDescriptor = Marshal.AllocHGlobal(Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
+					Marshal.Copy(m_pConfigs[interfaceIndex], index, pointerToInterfaceDescriptor, Marshal.SizeOf<USB_INTERFACE_DESCRIPTOR>());
 
 					var usbInterfaceDescriptor = (USB_INTERFACE_DESCRIPTOR)Marshal.PtrToStructure(pointerToInterfaceDescriptor, typeof(USB_INTERFACE_DESCRIPTOR));
 
